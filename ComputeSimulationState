@@ -1,0 +1,43 @@
+package projectPart3;
+
+public class ComputeSimulationState {
+
+	public void computeSimulation(int speed, int altitude, String gearPosition,
+			int timeToLand) {
+
+		boolean gear_air_speed_alarm_on = false;
+		boolean gear_not_down_alarm_on = false;
+		boolean airbrake_warning_on = false;
+		boolean gear_override_warning_on = false;
+		@SuppressWarnings("unused")
+		boolean gear_position;
+		boolean down = false;
+		boolean up = false;
+
+		if (gearPosition.equalsIgnoreCase("down")) {
+			down = true;
+		} else {
+			if (gearPosition.equalsIgnoreCase("up")) {
+				up = true;
+			} else
+				System.out.println("Invalid gear position");
+		}
+
+		airbrake_warning_on = (speed >= 250) && (timeToLand < 60);
+		gear_override_warning_on = (gear_position = down) && (speed > 400);
+
+		gear_not_down_alarm_on = (gear_position = up)
+				&& ((timeToLand <= 120) || altitude < 1000);
+
+		gear_air_speed_alarm_on = (gear_position = down) && (speed > 300); // 300<speed<400
+
+		DisplayController dc = new DisplayController();
+		dc.finalDisplay(gear_override_warning_on, airbrake_warning_on,
+				gear_not_down_alarm_on, gear_air_speed_alarm_on);
+
+		dc.messageDisplay(speed, timeToLand, gearPosition, altitude,
+				gear_override_warning_on, airbrake_warning_on,
+				gear_not_down_alarm_on, gear_air_speed_alarm_on);
+
+	}
+}
